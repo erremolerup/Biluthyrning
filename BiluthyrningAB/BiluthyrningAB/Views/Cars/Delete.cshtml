@@ -1,0 +1,60 @@
+﻿@model BiluthyrningAB.Models.Car
+
+@{
+    ViewData["Title"] = "Ändra";
+}
+
+@section Hero{
+
+    <div class="hero">
+    </div>
+
+    <div class="container" style="margin-top: -1900px;">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="text-block">
+                    <div class="text-block-text">
+                        <h2>Ta bort bil</h2>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <form asp-action="Delete"></form>
+                            </div>
+                        </div>
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.NumberPlate)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.NumberPlate)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.CarType)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.CarType)
+                            </dd>
+                            <dt>
+                                @Html.DisplayNameFor(model => model.NumberOfDrivenKm)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.NumberOfDrivenKm)
+                            </dd>
+                        </dl>
+                        <div>
+                            <form asp-action="Delete">
+                                <input type="hidden" asp-for="CarId" />
+                                <input type="submit" value="Ta bort" class="btn btn-primary" /> |
+                                <a asp-action="Index">Gå tillbaka</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
