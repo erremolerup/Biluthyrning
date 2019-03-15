@@ -15,7 +15,7 @@ namespace BiluthyrningAB.Controllers
     {
         private readonly AppDbContext _context;
 
-        public RentalsController(AppDbContext context) //Görs för att nå allting i AppDbContext, dvs. Rental, Car & Customer och för att slippa skapa nya instanser i varje funktion
+        public RentalsController(AppDbContext context)
         {
             _context = context;
         }
@@ -29,23 +29,6 @@ namespace BiluthyrningAB.Controllers
         //GET: vyn där man skapar en bokning
         public IActionResult Create()
         {
-            //CreateRentalVm rentalVm = new CreateRentalVm();
-
-            //string[] arrayOfCarTypes = Enum.GetNames(typeof(CarType));
-
-            //List<SelectListItem> list = new List<SelectListItem>();
-            //foreach (var carType in arrayOfCarTypes)
-            //{
-            //    list.Add(new SelectListItem
-            //    {
-            //        Text = carType,
-            //        Value = carType
-            //    });
-            //}
-            //rentalVm.CarTypes = list;
-            //rentalVm.Rental = new Rental();
-            //return View(rentalVm);
-
             string[] arr = Enum.GetNames(typeof(CarType));
 
             var viewmodel = new CreateRentalVm();
@@ -63,40 +46,6 @@ namespace BiluthyrningAB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RentalId,StartDate,Customer,Car")] Rental rental)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    //    //Skapar ett rentalId och sparar bokning
-            //    //    rentals.RentalId = Guid.NewGuid();
-            //    _context.Add(rentals);
-
-            //    //    //Skapar ett customerId och sparar kund
-            //    //    rentals.Customer.CustomerId = Guid.NewGuid();
-            //    //    _context.Add(rentals.Customer);
-
-            //    //    //Skapar ett CarId och sparar bil
-            //    //    rentals.Car.CarId = Guid.NewGuid();
-            //    //    _context.Add(rentals.Car);
-
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-
-            //CreateRentalVm rentalVm = new CreateRentalVm();
-            //string[] arrayOfCarTypes = Enum.GetNames(typeof(CarType));
-            //var vm = new CreateRentalVm();
-
-            //List<SelectListItem> list = new List<SelectListItem>();
-            //foreach (var carType in arrayOfCarTypes)
-            //{
-            //    list.Add(new SelectListItem
-            //    {
-            //        Text = carType,
-            //        Value = carType
-            //    });
-            //}
-            //rentalVm.CarTypes = list;
-            //return View(rentalVm);
-
             rental.Ongoing = true;
             rental.EndDate = rental.StartDate;
 
