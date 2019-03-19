@@ -18,37 +18,38 @@ namespace BiluthyrningAB.Services.Repositories
         }
         public void AddCar(Car car)
         {
-            throw new NotImplementedException();
+            _context.Add(car);
         }
 
         public bool CarExists(Guid id)
         {
-            throw new NotImplementedException();
+            return _context.Cars.Any(e => e.CarId == id);
         }
 
         public IEnumerable<Car> GetAllCars()
         {
-            throw new NotImplementedException();
+            return _context.Cars.ToList();
         }
 
         public Car GetCarById(Guid? id)
         {
-            throw new NotImplementedException();
+            return _context.Cars
+                .Single(x => x.CarId == id);
         }
 
         public IEnumerable<Car> GetCarsDependingOnBookingStatus(bool status)
         {
-            throw new NotImplementedException();
+            return _context.Cars.Where(x => x.Booked == status).ToList();
         }
 
         public void RemoveCar(Car car)
         {
-            throw new NotImplementedException();
+            _context.Cars.Remove(car);
         }
 
         public void UpdateCar(Car car)
         {
-            throw new NotImplementedException();
+            _context.Update(car);
         }
     }
 }

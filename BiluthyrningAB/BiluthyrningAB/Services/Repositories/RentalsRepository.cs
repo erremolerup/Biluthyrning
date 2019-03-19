@@ -31,7 +31,7 @@ namespace BiluthyrningAB.Services.Repositories
         public Rental GetRentalById(Guid? id)
         {
             return _context.Rentals.Include(x => x.Customer).Include(x => x.Car)
-                .FirstOrDefault(m => m.RentalId == id);
+                .FirstOrDefault(x => x.RentalId == id);
         }
 
         public IEnumerable<Rental> GetRentals()
