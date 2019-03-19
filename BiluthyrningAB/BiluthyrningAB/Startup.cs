@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BiluthyrningAB.Controllers;
 using BiluthyrningAB.Data;
+using BiluthyrningAB.Services.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,9 +35,17 @@ namespace BiluthyrningAB
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //Läggs till för att kunna använda data från klassen "AppDbContext" som i sin tur använder sig av EF
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
+
+
+            //Används för att koppla samman interface med klasser
+            services.AddTransient<ICustomersRepository, CustomersRepository>();
+            services.AddTransient<ICarsRepository, CarsRepository>();
+            services.AddTransient<IRentalsRepository, RentalsRepository>();
+            services.AddTransient<IEntityFrameworkRepository, EntityFrameworkRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

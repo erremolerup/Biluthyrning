@@ -32,7 +32,9 @@ namespace BiluthyrningAB.Models
         public int NewNumberKmDriven { get; set; }
 
         public Car Car { get; set; } //En bokning innehåller en bil
+        public Guid CarId { get; set; }
         public Customer Customer { get; set; } //En bokning innehåller en customer
+        public Guid CustomerId { get; set; }
 
 
         [Display(Name = "Kunden har kört i km")]

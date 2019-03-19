@@ -8,40 +8,95 @@ using BiluthyrningAB.Data;
 using Microsoft.EntityFrameworkCore;
 using BiluthyrningAB.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using BiluthyrningAB.Services.Repositories;
+
 
 namespace BiluthyrningAB.Controllers
 {
     public class RentalsController : Controller
     {
-        private readonly AppDbContext _context;
+        //private readonly AppDbContext _context;
 
-        public RentalsController(AppDbContext context)
+        //public RentalsController(AppDbContext context)
+        //{
+        //    _context = context;
+        //}
+        private readonly IRentalsRepository _rentalsRepository;
+        private readonly ICarsRepository _carsRepository;
+        private readonly ICustomersRepository _customersRepository;
+        private readonly IEntityFrameworkRepository _entityFrameworkRepository;
+
+
+        public RentalsController(IRentalsRepository rentalsRepository, ICarsRepository carsRepository, IEntityFrameworkRepository entityFrameworkRepository, ICustomersRepository customersRepository)
         {
-            _context = context;
+            _rentalsRepository = rentalsRepository;
+            _carsRepository = carsRepository;
+            _entityFrameworkRepository = entityFrameworkRepository;
+            _customersRepository = customersRepository;
         }
-
         // GET: Index för rentals
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Rentals.Include(x => x.Car).Include(y => y.Customer).ToListAsync());
+            //return View(await _context.Rentals.Include(x => x.Car).Include(y => y.Customer).ToListAsync());
+            return View(await (Task.Run(() => _rentalsRepository.GetAllRentals())));
         }
 
         //GET: vyn där man skapar en bokning
         public IActionResult Create()
         {
-            string[] arr = Enum.GetNames(typeof(CarType));
+            //Gammal utan repositories
+            //string[] arr = Enum.GetNames(typeof(CarType));
 
-            var viewmodel = new CreateRentalVm();
+            //var viewmodel = new CreateRentalVm();
 
-            viewmodel.CarTypes = arr.Select(x => new SelectListItem
-            {
-                Text = x,
-                Value = x
-            });
+            //viewmodel.CarTypes = arr.Select(x => new SelectListItem
+            //{
+            //    Text = x,
+            //    Value = x
+            //});
 
-            return View(viewmodel);
+            //return View(viewmodel);
+
+            CreateRentalVm rentalVm = new CreateRentalVm();
+
+            rentalVm.Cars = FillCarsListSelectListItems();
+
+            rentalVm.Customers = FillCustomersListSelectListItems();
+
+            return View(rentalVm);
+
         }
 
+        private List<SelectListItem> FillCustomersListSelectListItems()
+        {
+            var customers = _customersRepository.GetAllCustomers();
+
+            List<SelectListItem> listOfCustomers = new List<SelectListItem>();
+
+            foreach (var customer in customers)
+            {
+                string wholeName = $"{customer.FirstName} {customer.LastName}";
+                var x = new SelectListItem() { Text = wholeName, Value = customer.CustomerId.ToString() };
+                listOfCustomers.Add(x);
+            }
+            return listOfCustomers;
+        }
+
+        private List<SelectListItem> FillCarsListSelectListItems()
+        {
+            var cars = _carsRepository.GetAllCars();
+
+            List<SelectListItem> listOfCars = new List<SelectListItem>();
+
+            foreach (var car in cars)
+            {
+                var y = new SelectListItem() { Text = car.NumberPlate, Value = car.CarId.ToString(), Group = new SelectListGroup { Name = car.CarType.ToString() } };
+                listOfCars.Add(y);
+            }
+            return listOfCars;
+        }
+
+        //KAN VARA FEL! SE ÖVER
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RentalId,StartDate,Customer,Car")] Rental rental)
@@ -49,11 +104,33 @@ namespace BiluthyrningAB.Controllers
             rental.Ongoing = true;
             rental.EndDate = rental.StartDate;
 
+            rental.Car = _carsRepository.GetCarById(rental.CarId);
+
+            if (rental.Car.Booked == false)
+            {
+                rental.Car.Booked = true;
+            }
+            else
+            {
+                ViewBag.Message = "Bilen är upptagen";
+                CreateRentalVm error_rentalVm = new CreateRentalVm();
+                error_rentalVm.Cars = FillCarsListSelectListItems();
+                error_rentalVm.Customers = FillCustomersListSelectListItems();
+                return View(error_rentalVm);
+            }
             if (ModelState.IsValid)
             {
-                _context.Add(rental);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //_context.Add(rental);
+                //await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+
+                //lägger till bokning i systemet.
+                _rentalsRepository.AddRental(rental);
+
+                //uppdaterar till bokad bil
+                _carsRepository.UpdateCar(rental.Car);
+
+                _entityFrameworkRepository.SaveChangesAsync();
             }
 
             var viewmodel = new CreateRentalVm();
@@ -65,7 +142,9 @@ namespace BiluthyrningAB.Controllers
         //GET: Vy slutföra bokning
         public IActionResult FinishRental(Guid? id)
         {
-            var rental = _context.Rentals.Include(x => x.Car).Single(x => x.RentalId == id);
+            //var rental = _context.Rentals.Include(x => x.Car).Single(x => x.RentalId == id);
+
+            var rental = _rentalsRepository.GetRentalById(id);
 
             if (id == null)
                 return NotFound();
@@ -85,21 +164,28 @@ namespace BiluthyrningAB.Controllers
             {
                 return NotFound();
             }
+            if (rental.Price < 0)
+            {
+                ViewBag.Message = "Återlämningsdatum måste vara senare än uthämtningsdatum";
+                return View(rental);
+            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    //avslutar bokning
                     rental.Ongoing = false;
-
+                    //sätter bilen till ledig igen
+                    rental.Car.Booked = false;
+                    //uppdaterar bilens körda km
                     rental.Car.NumberOfDrivenKm = rental.NewNumberKmDriven;
-                        //Car.NumberOfDrivenKm + Convert.ToInt32(rental.NumberOfKm);
 
-                    _context.Update(rental.Car);
+                    _carsRepository.UpdateCar(rental.Car);
 
-                    _context.Update(rental);
+                    _rentalsRepository.UpdateRental(rental);
 
-                    await _context.SaveChangesAsync();
+                    _entityFrameworkRepository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -125,7 +211,8 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
+            //var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
+            var rental = _rentalsRepository.GetRentalById(id);
             if (rental == null)
                 return NotFound();
 
@@ -141,12 +228,17 @@ namespace BiluthyrningAB.Controllers
             {
                 return NotFound();
             }
+            if (rental.Price < 0)
+            {
+                ViewBag.Message = "Återlämningsdatum måste vara senare än uthämtningsdatum";
+                return View(rental);
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(rental);
-                    await _context.SaveChangesAsync();
+                    _rentalsRepository.UpdateRental(rental);
+                    _entityFrameworkRepository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -170,7 +262,9 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
+            //var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
+
+            var rental = _rentalsRepository.GetRentalById(id);
             if (rental == null)
                 return NotFound();
 
@@ -182,9 +276,11 @@ namespace BiluthyrningAB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var rental = await _context.Rentals.FindAsync(id);
-            _context.Rentals.Remove(rental);
-            await _context.SaveChangesAsync();
+            //var rental = await _context.Rentals.FindAsync(id);
+            var rental = _rentalsRepository.GetRentalById(id);
+            //_context.Rentals.Remove(rental);
+            _rentalsRepository.RemoveRental(rental);
+            _entityFrameworkRepository.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -194,7 +290,8 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
+            //var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
+            var rental = _rentalsRepository.GetRentalById(id);
             if (rental == null)
                 return NotFound();
 
@@ -204,7 +301,8 @@ namespace BiluthyrningAB.Controllers
         //Kollar på id ifall uthyrningen existerar
         private bool RentalExist(Guid id)
         {
-            return _context.Rentals.Any(x => x.RentalId == id);
+            //return _context.Rentals.Any(x => x.RentalId == id);
+            return _rentalsRepository.RentalExists(id);
         }
     }
 }
