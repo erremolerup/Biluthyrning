@@ -19,9 +19,11 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <input type="hidden" asp-for="RentalId" />
-                        <input type="hidden" asp-for="Car.CarId" />
-                        <input type="hidden" asp-for="Car.CarType" />
-                        <input type="hidden" asp-for="Car.NumberPlate" />
+                        <input type="hidden" asp-for="CarId" />
+                        @*<input type="hidden" asp-for="Car.CarType" />
+                        <input type="hidden" asp-for="Car.NumberPlate" />*@
+                        <input type="hidden" asp-for="CustomerId" />
+
 
                         <div class="form-group">
                             <label asp-for="NewNumberKmDriven" class="control-label"></label>

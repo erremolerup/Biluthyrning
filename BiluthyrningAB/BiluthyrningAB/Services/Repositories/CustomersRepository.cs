@@ -20,6 +20,8 @@ namespace BiluthyrningAB.Services.Repositories
         public void AddCustomer(Customer customer)
         {
             _context.Add(customer);
+            _context.SaveChanges();
+
         }
 
         public bool CustomerExists(Guid id)
@@ -41,11 +43,16 @@ namespace BiluthyrningAB.Services.Repositories
         public void RemoveCustomer(Customer customer)
         {
             _context.Customers.Remove(customer);
+            _context.SaveChanges();
+
+
         }
 
         public void UpdateCustomer(Customer customer)
         {
             _context.Update(customer);
+            _context.SaveChanges();
+
         }
     }
 }

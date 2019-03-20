@@ -1,28 +1,35 @@
 ﻿using BiluthyrningAB.Data;
 using BiluthyrningAB.Models;
+using BiluthyrningAB.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BiluthyrningAB.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly AppDbContext _context;
+        //private readonly AppDbContext _context;
 
-        public CustomersController(AppDbContext context)
+        //public CustomersController(AppDbContext context)
+        //{
+        //    _context = context;
+        //}
+        private readonly ICustomersRepository _customersRepository;
+
+        public CustomersController(IRentalsRepository rentalsRepository, ICarsRepository carsRepository, IEntityFrameworkRepository entityFrameworkRepository, ICustomersRepository customersRepository)
         {
-            _context = context;
+            _customersRepository = customersRepository;
         }
 
         //GET: vy för index
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Customers);
+            return View(await(Task.Run(() => _customersRepository.GetAllCustomers())));
         }
 
         //GET: vy för create
@@ -34,12 +41,12 @@ namespace BiluthyrningAB.Controllers
         //POST: Skapa ny kund
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Guid id, [Bind("Customer,SocSecNumber,FirstName,LastName")] Customer customer)
+        public async Task<IActionResult> Create([Bind("CustomerId,SocSecNumber,FirstName,LastName")] Customer customer)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
+                customer.CustomerId = Guid.NewGuid();
+                _customersRepository.AddCustomer(customer);
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);
@@ -51,7 +58,7 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            var customer = _context.Customers.Single(x => x.CustomerId == id);
+            var customer = _customersRepository.GetCustomerById(id);
             if (customer == null)
                 return NotFound();
 
@@ -72,8 +79,7 @@ namespace BiluthyrningAB.Controllers
             {
                 try
                 {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
+                    _customersRepository.UpdateCustomer(customer);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -99,8 +105,7 @@ namespace BiluthyrningAB.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
+            var customer = _customersRepository.GetCustomerById(id);
             if (customer == null)
             {
                 return NotFound();
@@ -114,9 +119,8 @@ namespace BiluthyrningAB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
+            var customer = _customersRepository.GetCustomerById(id);
+            _customersRepository.RemoveCustomer(customer);
             return RedirectToAction(nameof(Index));
         }
 
@@ -128,7 +132,8 @@ namespace BiluthyrningAB.Controllers
 
         private bool CustomerExist(Guid id)
         {
-            return _context.Customers.Any(x => x.CustomerId == id);
+            return _customersRepository.CustomerExists(id);
+
         }
     }
 }

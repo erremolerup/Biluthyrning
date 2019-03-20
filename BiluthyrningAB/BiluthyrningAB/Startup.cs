@@ -68,6 +68,7 @@ namespace BiluthyrningAB
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            //fiffigt för att slippa ladda om sidan varje gång man gjort någon ändring
             app.UseBrowserLink();
 
             app.UseMvc(routes =>

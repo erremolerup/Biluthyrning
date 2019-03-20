@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BiluthyrningAB.Models;
-using BiluthyrningAB.Data;
 using Microsoft.EntityFrameworkCore;
 using BiluthyrningAB.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,14 +22,12 @@ namespace BiluthyrningAB.Controllers
         private readonly IRentalsRepository _rentalsRepository;
         private readonly ICarsRepository _carsRepository;
         private readonly ICustomersRepository _customersRepository;
-        private readonly IEntityFrameworkRepository _entityFrameworkRepository;
 
 
         public RentalsController(IRentalsRepository rentalsRepository, ICarsRepository carsRepository, IEntityFrameworkRepository entityFrameworkRepository, ICustomersRepository customersRepository)
         {
             _rentalsRepository = rentalsRepository;
             _carsRepository = carsRepository;
-            _entityFrameworkRepository = entityFrameworkRepository;
             _customersRepository = customersRepository;
         }
         // GET: Index för rentals
@@ -96,7 +92,6 @@ namespace BiluthyrningAB.Controllers
             return listOfCars;
         }
 
-        //KAN VARA FEL! SE ÖVER
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RentalId,StartDate,CustomerId,CarId")] Rental rental)
@@ -126,12 +121,13 @@ namespace BiluthyrningAB.Controllers
                 //return RedirectToAction(nameof(Index));
 
                 //lägger till bokning i systemet.
+                rental.RentalId = Guid.NewGuid();
                 _rentalsRepository.AddRental(rental);
 
                 //uppdaterar till bokad bil
                 _carsRepository.UpdateCar(rental.Car);
 
-                _entityFrameworkRepository.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
             var viewmodel = new CreateRentalVm();
@@ -159,8 +155,13 @@ namespace BiluthyrningAB.Controllers
         //POST: Slutföra bokning
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> FinishRental(Guid id, [Bind("RentalId,NumberOfKm,StartDate,EndDate,Car")] Rental rental)
+        public async Task<IActionResult> FinishRental(Guid id, [Bind("RentalId,NewNumberKmDriven,StartDate,EndDate,CarId,CustomerId")] Rental rental)
         {
+
+
+            rental.Car = _carsRepository.GetCarById(rental.CarId);
+            rental.Customer = _customersRepository.GetCustomerById(rental.CustomerId);
+
             if (id != rental.RentalId)
             {
                 return NotFound();
@@ -185,8 +186,6 @@ namespace BiluthyrningAB.Controllers
                     _carsRepository.UpdateCar(rental.Car);
 
                     _rentalsRepository.UpdateRental(rental);
-
-                    _entityFrameworkRepository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -239,7 +238,6 @@ namespace BiluthyrningAB.Controllers
                 try
                 {
                     _rentalsRepository.UpdateRental(rental);
-                    _entityFrameworkRepository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -281,7 +279,6 @@ namespace BiluthyrningAB.Controllers
             var rental = _rentalsRepository.GetRentalById(id);
             //_context.Rentals.Remove(rental);
             _rentalsRepository.RemoveRental(rental);
-            _entityFrameworkRepository.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

@@ -19,6 +19,8 @@ namespace BiluthyrningAB.Services.Repositories
         public void AddCar(Car car)
         {
             _context.Add(car);
+            _context.SaveChanges();
+
         }
 
         public bool CarExists(Guid id)
@@ -45,11 +47,16 @@ namespace BiluthyrningAB.Services.Repositories
         public void RemoveCar(Car car)
         {
             _context.Cars.Remove(car);
+            _context.SaveChanges();
+
         }
 
         public void UpdateCar(Car car)
         {
             _context.Update(car);
+
+            _context.SaveChanges();
+
         }
     }
 }

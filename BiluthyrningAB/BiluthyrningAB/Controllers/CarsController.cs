@@ -22,12 +22,12 @@ namespace BiluthyrningAB.Controllers
         //    _context = context;
         //}
         private readonly ICarsRepository _carsRepository;
-        private readonly IEntityFrameworkRepository _entityFrameworkRepository;
+        //private readonly IEntityFrameworkRepository _entityFrameworkRepository;
 
         public CarsController(IRentalsRepository rentalsRepository, ICarsRepository carsRepository, IEntityFrameworkRepository entityFrameworkRepository, ICustomersRepository customersRepository)
         {
             _carsRepository = carsRepository;
-            _entityFrameworkRepository = entityFrameworkRepository;
+            //_entityFrameworkRepository = entityFrameworkRepository;
         }
 
         //GET: vy för index
@@ -71,7 +71,7 @@ namespace BiluthyrningAB.Controllers
             if (ModelState.IsValid)
             {
                 _carsRepository.AddCar(car);
-                _entityFrameworkRepository.SaveChangesAsync();
+                //_entityFrameworkRepository.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(car);
@@ -110,7 +110,7 @@ namespace BiluthyrningAB.Controllers
                 try
                 {
                     _carsRepository.UpdateCar(car);
-                    _entityFrameworkRepository.SaveChangesAsync();
+                    //_entityFrameworkRepository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -153,7 +153,7 @@ namespace BiluthyrningAB.Controllers
         {
             var car = _carsRepository.GetCarById(id);
             _carsRepository.RemoveCar(car);
-            _entityFrameworkRepository.SaveChangesAsync();
+            //_entityFrameworkRepository.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

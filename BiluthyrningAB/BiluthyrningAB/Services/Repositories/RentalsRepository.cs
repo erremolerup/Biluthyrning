@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BiluthyrningAB.Services.Repositories
 {
@@ -21,11 +20,13 @@ namespace BiluthyrningAB.Services.Repositories
         public void AddRental(Rental rental)
         {
             _context.Add(rental);
+            _context.SaveChanges();
+
         }
 
         public IEnumerable<Rental> GetAllRentals()
         {
-            return _context.Rentals.Include(x => x.Car).ToList();
+            return _context.Rentals.Include(x => x.Car).Include(y => y.Customer).ToList();
         }
 
         public Rental GetRentalById(Guid? id)
@@ -52,6 +53,8 @@ namespace BiluthyrningAB.Services.Repositories
         public void RemoveRental(Rental rental)
         {
             _context.Rentals.Remove(rental);
+            _context.SaveChanges();
+
         }
 
         public bool RentalExists(Guid id)
@@ -62,6 +65,7 @@ namespace BiluthyrningAB.Services.Repositories
         public void UpdateRental(Rental rental)
         {
             _context.Update(rental);
+            _context.SaveChanges();
         }
     }
 }
