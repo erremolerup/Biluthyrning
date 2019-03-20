@@ -33,8 +33,8 @@ namespace BiluthyrningAB.Services.Repositories
 
         public Car GetCarById(Guid? id)
         {
-            return _context.Cars
-                .Single(x => x.CarId == id);
+            //return _context.Cars.Single(x => x.CarId == id);
+            return _context.Cars.FirstOrDefault(x => x.CarId == id);
         }
 
         public IEnumerable<Car> GetCarsDependingOnBookingStatus(bool status)

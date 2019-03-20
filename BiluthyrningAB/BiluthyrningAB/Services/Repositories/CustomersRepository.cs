@@ -27,7 +27,7 @@ namespace BiluthyrningAB.Services.Repositories
             return _context.Customers.Any(e => e.CustomerId == id);
         }
 
-        public IEnumerable<Customer> GetAllCustomers()
+        public IEnumerable<Customer> GetAllCustomers() 
         {
             return _context.Customers.ToList();
         }

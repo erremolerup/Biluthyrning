@@ -99,13 +99,14 @@ namespace BiluthyrningAB.Controllers
         //KAN VARA FEL! SE ÖVER
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RentalId,StartDate,Customer,Car")] Rental rental)
+        public async Task<IActionResult> Create([Bind("RentalId,StartDate,CustomerId,CarId")] Rental rental)
         {
             rental.Ongoing = true;
             rental.EndDate = rental.StartDate;
 
             rental.Car = _carsRepository.GetCarById(rental.CarId);
 
+            //om bilen är obokad sätter vi den till bokad
             if (rental.Car.Booked == false)
             {
                 rental.Car.Booked = true;

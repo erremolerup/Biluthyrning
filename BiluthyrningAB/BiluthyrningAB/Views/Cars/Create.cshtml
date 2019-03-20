@@ -1,4 +1,4 @@
-﻿@model BiluthyrningAB.Models.Car
+﻿@model BiluthyrningAB.Models.ViewModels.CarVm
 
 @{
     ViewData["Title"] = "Skapa ny bokning";
@@ -21,19 +21,20 @@
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                                 <div class="form-group">
-                                    <label asp-for="NumberPlate" class="control-label">Efternamn</label>
-                                    <input asp-for="NumberPlate" class="form-control" />
-                                    <span asp-validation-for="NumberPlate" class="text-danger"></span>
+                                    <label asp-for="Car.NumberPlate" class="control-label">Registreringsnummer</label>
+                                    <input asp-for="Car.NumberPlate" class="form-control" />
+                                    <span asp-validation-for="Car.NumberPlate" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="CarType" class="control-label">Förnamn</label>
-                                    <input asp-for="CarType" class="form-control" />
-                                    <span asp-validation-for="CarType" class="text-danger"></span>
+                                    <label class="control-label">Biltyp</label>
+                                    <select asp-for="Car.CarType" asp-items="Model.CarTypes" class="form-control">
+                                        <option disabled selected>Välj biltyp</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="NumberOfDrivenKm" class="control-label">Personnummer</label>
-                                    <input asp-for="NumberOfDrivenKm" class="form-control" />
-                                    <span asp-validation-for="NumberOfDrivenKm" class="text-danger"></span>
+                                    <label asp-for="Car.NumberOfDrivenKm" class="control-label">Antal körda km</label>
+                                    <input asp-for="Car.NumberOfDrivenKm" class="form-control" />
+                                    <span asp-validation-for="Car.NumberOfDrivenKm" class="text-danger"></span>
                                 </div>
                                 <br />
 

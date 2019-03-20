@@ -9,29 +9,58 @@ using System.Threading.Tasks;
 using BiluthyrningAB.Models;
 using BiluthyrningAB.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
+using BiluthyrningAB.Services.Repositories;
 
 namespace BiluthyrningAB.Controllers
 {
     public class CarsController : Controller
     {
-        private readonly AppDbContext _context;
+        //private readonly AppDbContext _context;
 
-        public CarsController(AppDbContext context)
+        //public CarsController(AppDbContext context)
+        //{
+        //    _context = context;
+        //}
+        private readonly ICarsRepository _carsRepository;
+        private readonly IEntityFrameworkRepository _entityFrameworkRepository;
+
+        public CarsController(IRentalsRepository rentalsRepository, ICarsRepository carsRepository, IEntityFrameworkRepository entityFrameworkRepository, ICustomersRepository customersRepository)
         {
-            _context = context;
+            _carsRepository = carsRepository;
+            _entityFrameworkRepository = entityFrameworkRepository;
         }
 
         //GET: vy för index
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Cars);
+            //return View(_context.Cars);
+            return View(await(Task.Run(() => _carsRepository.GetAllCars())));
+
         }
 
         //GET: vy för create
         public IActionResult Create()
         {
-            return View();
+            //return View();
+            CarVm carTypeVm = new CarVm();
+
+            carTypeVm.CarTypes = GetCarTypeToSelectList();
+
+            return View(carTypeVm);
+        }
+
+        private List<SelectListItem> GetCarTypeToSelectList()
+        {
+            string[] carTypesArray = Enum.GetNames(typeof(CarType));
+
+            List<SelectListItem> listOfCarTypes = new List<SelectListItem>();
+
+            foreach (var car in carTypesArray)
+            {
+                var y = new SelectListItem() { Text = car, Value = car };
+                listOfCarTypes.Add(y);
+            }
+            return listOfCarTypes;
         }
 
         //POST: Skapa ny bil
@@ -41,8 +70,8 @@ namespace BiluthyrningAB.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(car);
-                await _context.SaveChangesAsync();
+                _carsRepository.AddCar(car);
+                _entityFrameworkRepository.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(car);
@@ -54,11 +83,16 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            var car = _context.Cars.Single(x => x.CarId == id);
+            var car = _carsRepository.GetCarById(id);
             if (car == null)
                 return NotFound();
 
-            return View(car);
+            CarVm carTypeVm = new CarVm();
+
+            carTypeVm.CarTypes = GetCarTypeToSelectList();
+            carTypeVm.Car = car;
+
+            return View(carTypeVm);
         }
 
 
@@ -75,12 +109,12 @@ namespace BiluthyrningAB.Controllers
             {
                 try
                 {
-                    _context.Update(car);
-                    await _context.SaveChangesAsync();
+                    _carsRepository.UpdateCar(car);
+                    _entityFrameworkRepository.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExist(car.CarId))
+                    if (!CarExist(car.CarId))
                     {
                         return NotFound();
                     }
@@ -91,7 +125,11 @@ namespace BiluthyrningAB.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(car);
+            CarVm carTypeVm = new CarVm();
+
+            carTypeVm.CarTypes = GetCarTypeToSelectList();
+            carTypeVm.Car = car;
+            return View(carTypeVm);
         }
 
         //GET: vy för att ta bort bil
@@ -101,12 +139,11 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            var rental = await _context.Cars
-                .FirstOrDefaultAsync(m => m.CarId == id);
-            if (rental == null)
+            var car = _carsRepository.GetCarById(id);
+            if (car == null)
                 return NotFound();
 
-            return View(rental);
+            return View(car);
         }
 
         //POST: ta bort bil
@@ -114,21 +151,29 @@ namespace BiluthyrningAB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var car = await _context.Cars.FindAsync(id);
-            _context.Cars.Remove(car);
-            await _context.SaveChangesAsync();
+            var car = _carsRepository.GetCarById(id);
+            _carsRepository.RemoveCar(car);
+            _entityFrameworkRepository.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         // GET: vy för detaljer
-        public IActionResult Details()
+        public IActionResult Details(Guid? id)
         {
-            return View();
+            if (id == null)
+                return NotFound();
+
+            var car = _carsRepository.GetCarById(id);
+
+            if (car == null)
+                return NotFound();
+
+            return View(car);
         }
 
-        private bool CustomerExist(Guid id)
+        private bool CarExist(Guid id)
         {
-            return _context.Cars.Any(x => x.CarId == id);
+            return _carsRepository.CarExists(id);
         }
     }
 }

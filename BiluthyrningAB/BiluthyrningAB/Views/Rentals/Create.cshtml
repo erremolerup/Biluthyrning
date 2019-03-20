@@ -21,31 +21,17 @@
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                                 <div class="form-group">
-                                        <label asp-for="Rental.Customer.FirstName" class="control-label">Förnamn</label>
-                                        <input asp-for="Rental.Customer.FirstName" class="form-control" />
-                                        <span asp-validation-for="Rental.Customer.FirstName" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Rental.Customer.LastName" class="control-label">Efternamn</label>
-                                        <input asp-for="Rental.Customer.LastName" class="form-control" />
-                                        <span asp-validation-for="Rental.Customer.LastName" class="text-danger"></span>
-                                    </div>
-                                <div class="form-group">
-                                    <label asp-for="Rental.Customer.SocSecNumber" class="control-label">Personnummer</label>
-                                    <input asp-for="Rental.Customer.SocSecNumber" class="form-control" />
-                                    <span asp-validation-for="Rental.Customer.SocSecNumber" class="text-danger"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label asp-for="Rental.Car.CarType" class="control-label">Biltyp</label>
-                                    <select asp-for="Rental.Car.CarType"
-                                            asp-items="Model.Cars" class="form-control">
-                                        <option>Välj biltyp</option>
+                                    <label class="control-label">Kund</label>
+                                    <select asp-for="Rental.CustomerId" asp-items="Model.Customers" class="form-control">
+                                        <option disabled selected>Välj kund</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="Rental.Car.NumberPlate" class="control-label"></label>
-                                    <input asp-for="Rental.Car.NumberPlate" class="form-control" />
-                                    <span asp-validation-for="Rental.Car.NumberPlate" class="text-danger"></span>
+                                    <label asp-for="Rental.CarId" class="control-label">Bil</label>
+                                    <select asp-for="Rental.CarId"
+                                            asp-items="Model.Cars" class="form-control">
+                                        <option>Välj bil</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="Rental.StartDate" class="control-label"></label>
