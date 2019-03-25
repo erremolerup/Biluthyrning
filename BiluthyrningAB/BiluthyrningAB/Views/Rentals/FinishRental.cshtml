@@ -21,14 +21,19 @@
                         <input type="hidden" asp-for="RentalId" />
                         <input type="hidden" asp-for="CarId" />
                         @*<input type="hidden" asp-for="Car.CarType" />
-                        <input type="hidden" asp-for="Car.NumberPlate" />*@
+                            <input type="hidden" asp-for="Car.NumberPlate" />*@
                         <input type="hidden" asp-for="CustomerId" />
 
+                        @Html.DisplayNameFor(model => model.Car.NumberOfDrivenKm)
+                        @Html.DisplayFor(model => model.Car.NumberOfDrivenKm)
+                        <br />
 
                         <div class="form-group">
                             <label asp-for="NewNumberKmDriven" class="control-label"></label>
                             <input asp-for="NewNumberKmDriven" type="number" class="form-control" />
-                            <span asp-validation-for="NewNumberKmDriven" class="text-danger"></span>
+                            <span asp-validation-for="NewNumberKmDriven" class="text-danger">
+
+                            </span>
                         </div>
 
                         <input type="hidden" asp-for="StartDate" />

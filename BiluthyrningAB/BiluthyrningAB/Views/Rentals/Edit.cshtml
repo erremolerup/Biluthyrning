@@ -9,8 +9,6 @@
     <div class="hero">
     </div>
 
-    @{ int count = 1;}
-
     <div class="container" style="margin-top: -1900px;">
         <div class="row">
             <div class="col-sm-10">
@@ -33,15 +31,16 @@
                                         <input asp-for="Car.CarType" class="form-control" />
                                         <span asp-validation-for="Car.CarType" class="text-danger"></span>
                                     </div>
+                                   
                                     <div class="form-group">
                                         <label asp-for="Car.NumberPlate" class="control-label"></label>
                                         <input asp-for="Car.NumberPlate" class="form-control" />
                                         <span asp-validation-for="Car.NumberPlate" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
-                                        <label asp-for="NumberOfKm" class="control-label"></label>
-                                        <input asp-for="NumberOfKm" class="form-control" />
-                                        <span asp-validation-for="NumberOfKm" class="text-danger"></span>
+                                        <label asp-for="NewNumberKmDriven" class="control-label"></label>
+                                        <input asp-for="NewNumberKmDriven" class="form-control" />
+                                        <span asp-validation-for="NewNumberKmDriven" class="text-danger"></span>
                                     </div>
                                     <div class="form-group">
                                         <label asp-for="StartDate" class="control-label"></label>

@@ -135,5 +135,10 @@ namespace BiluthyrningAB.Controllers
             return _customersRepository.CustomerExists(id);
 
         }
+
+        //private bool CustomerExistOnName(string FirstName, string LastName)
+        //{
+        //    return _customersRepository.CustomerExistOnName(FirstName, LastName);
+        //}
     }
 }

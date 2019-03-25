@@ -64,10 +64,11 @@ body {
     width: 115%;
     background-color: black;
     color: white;
-    padding-left: 20px;
+    /*padding-left: 20px;
     padding-right: 20px;
     padding-top: 5px;
-    padding-bottom: 5px;
+    padding-bottom: 5px;*/
+    padding: 5px 20px 5px 20px;
     opacity: 0.8;
 }
 

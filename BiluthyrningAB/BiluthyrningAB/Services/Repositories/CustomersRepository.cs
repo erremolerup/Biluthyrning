@@ -24,6 +24,12 @@ namespace BiluthyrningAB.Services.Repositories
 
         }
 
+        //public bool CustomerExistOnName(string firstName, string lastName)
+        //{
+        //    var checkFirstName = _context.Customers.Any(x => x.FirstName == firstName && x.LastName == lastName);
+        //    return checkFirstName;
+        //}
+
         public bool CustomerExists(Guid id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);

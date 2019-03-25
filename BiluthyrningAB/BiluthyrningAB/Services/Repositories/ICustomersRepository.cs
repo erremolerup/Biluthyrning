@@ -13,6 +13,7 @@ namespace BiluthyrningAB.Services.Repositories
 
         Customer GetCustomerById(Guid? id);
         bool CustomerExists(Guid id);
+        //bool CustomerExistOnName(string FirstName, string LastName);
 
         void AddCustomer(Customer customer);
         void UpdateCustomer(Customer customer);
