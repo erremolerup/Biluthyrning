@@ -1,5 +1,6 @@
 ﻿using BiluthyrningAB.Data;
 using BiluthyrningAB.Models;
+using BiluthyrningAB.Models.ViewModels;
 using BiluthyrningAB.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -130,11 +131,16 @@ namespace BiluthyrningAB.Controllers
                 return NotFound();
 
             var customer = _customersRepository.GetCustomerById(id);
+            CustomerVm vm = new CustomerVm();
+            vm.Customer = customer;
+
+            var customerBookings = _customersRepository.GetRentalsByCustomerId(id);
+            vm.GetRentalsByCustomerId = customerBookings;
 
             if (customer == null)
                 return NotFound();
 
-            return View(customer);
+            return View(vm);
         }
 
         private bool CustomerExist(Guid id)
@@ -149,11 +155,15 @@ namespace BiluthyrningAB.Controllers
                 return NotFound();
 
             var customer = _customersRepository.GetCustomerById(id);
+            CustomerVm vm = new CustomerVm();
+            vm.Customer = customer;
 
-            if (customer == null)
+            var customerBookings = _customersRepository.GetRentalsByCustomerId(id);
+
+            if (vm == null)
                 return NotFound();
 
-            return View(customer);
+            return View(vm);
         }
     }
 }

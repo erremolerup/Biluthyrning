@@ -1,4 +1,4 @@
-﻿@model BiluthyrningAB.Models.Customer
+﻿@model BiluthyrningAB.Models.ViewModels.CustomerVm
 
 @{
     ViewData["Title"] = "Detaljer";
@@ -17,70 +17,107 @@
                 <div class="text-block">
                     <div class="text-block-text">
                         <h2>Kundinformation</h2>
+                        <hr />
 
                         <table class="table">
                             <thead>
                                 <dl class="dl-horizontal">
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.FirstName)
+                                        @Html.DisplayNameFor(model => model.Customer.FirstName)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.FirstName)
+                                        @Html.DisplayFor(model => model.Customer.FirstName)
                                     </dd>
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.LastName)
+                                        @Html.DisplayNameFor(model => model.Customer.LastName)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.LastName)
+                                        @Html.DisplayFor(model => model.Customer.LastName)
                                     </dd>
                                     <dt>
-                                        @Html.DisplayNameFor(model => model.SocSecNumber)
+                                        @Html.DisplayNameFor(model => model.Customer.SocSecNumber)
                                     </dt>
                                     <dd>
-                                        @Html.DisplayFor(model => model.SocSecNumber)
+                                        @Html.DisplayFor(model => model.Customer.SocSecNumber)
                                     </dd>
-                                    <dt>
-                                        @Html.DisplayNameFor(model => model.Rentals)
-                                    </dt>
-                            <tbody>
-                                @foreach (var item in Model.Rentals)
-                                {
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(modelItem => item.Car.NumberPlate)
-                                    </th>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Car.NumberPlate)
-                                    </td>
-                                    <th>
-                                        @Html.DisplayNameFor(modelItem => item.Car.CarType)
-                                    </th>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Car.CarType)
-                                    </td>
-                                    <th>
-                                        @Html.DisplayNameFor(modelItem => item.StartDate)
-                                    </th>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.StartDate)
-                                    </td>
-                                    <th>
-                                        @Html.DisplayNameFor(modelItem => item.EndDate)
-                                    </th>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EndDate)
-                                    </td>
-                                    <th>
-                                        @Html.DisplayNameFor(modelItem => item.Ongoing)
-                                    </th>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Ongoing)
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
+                                </dl>
+                                <hr />
+                                <h4>
+                                    @Html.DisplayNameFor(model => model.Customer.Rentals)
+                                </h4>
                             </thead>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Car.NumberPlate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Car.CarType)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Rental.StartDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Rental.EndDate)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Rental.Ongoing)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Rental.Price)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.GetRentalsByCustomerId)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Car.NumberPlate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Car.CarType)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.StartDate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EndDate)
+                                            </td>
+                                            <td>
+                                                @if (item.Ongoing == false)
+                                                {
+                                                    <p>
+                                                        Återlämnad
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p>Ej återlämnad</p>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.Ongoing == true)
+                                                {
+                                                    <p> - </p>
+                                                }
+
+                                                else
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.Price)
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
                         </table>
+
+                        <div>
+                            <a asp-action="Index">Gå tillbaka</a>
+                        </div>
                     </div>
                 </div>
             </div>

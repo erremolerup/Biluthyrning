@@ -10,7 +10,7 @@ namespace BiluthyrningAB.Services.Repositories
     public interface ICustomersRepository
     {
         IEnumerable<Customer> GetAllCustomers();
-        //Customer GetRentalsByCustomerId(Guid? id);
+        IEnumerable<Rental> GetRentalsByCustomerId(Guid? id);
 
         Customer GetCustomerById(Guid? id);
         bool CustomerExists(Guid id);

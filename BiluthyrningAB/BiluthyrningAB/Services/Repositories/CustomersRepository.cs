@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BiluthyrningAB.Data;
 using BiluthyrningAB.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BiluthyrningAB.Services.Repositories
 {
@@ -51,9 +52,9 @@ namespace BiluthyrningAB.Services.Repositories
             _context.SaveChanges();
         }
 
-        //public Customer GetRentalsByCustomerId(Guid? id)
-        //{
-        //     return _context.Rentals.Where(x => x.CustomerId == id).ToList();
-        //}
+        public IEnumerable<Rental> GetRentalsByCustomerId(Guid? id)
+        {
+            return _context.Rentals.Where(x => x.CustomerId == id).Include(y => y.Car).ToList();
+        }
     }
 }

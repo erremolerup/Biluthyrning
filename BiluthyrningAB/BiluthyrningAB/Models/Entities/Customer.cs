@@ -32,7 +32,7 @@ namespace BiluthyrningAB.Models
         [ValidateOfAge]
         public string SocSecNumber { get; set; }
 
-        [Display(Name = "Kundens bilhyrningar")]
+        [Display(Name = "Kundens tidigare och nuvarande uthyrningar")]
         public List<Rental> Rentals { get; set; } //En kund kan ha flera bokningar
 
         internal class ValidateOfAge : ValidationAttribute
