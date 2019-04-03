@@ -24,12 +24,6 @@ namespace BiluthyrningAB.Services.Repositories
 
         }
 
-        //public bool CustomerExistOnName(string firstName, string lastName)
-        //{
-        //    var checkFirstName = _context.Customers.Any(x => x.FirstName == firstName && x.LastName == lastName);
-        //    return checkFirstName;
-        //}
-
         public bool CustomerExists(Guid id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);
@@ -42,23 +36,24 @@ namespace BiluthyrningAB.Services.Repositories
 
         public Customer GetCustomerById(Guid? id)
         {
-            return _context.Customers
-                .Single(x => x.CustomerId == id);
+            return _context.Customers.Single(x => x.CustomerId == id);
         }
 
         public void RemoveCustomer(Customer customer)
         {
             _context.Customers.Remove(customer);
             _context.SaveChanges();
-
-
         }
 
         public void UpdateCustomer(Customer customer)
         {
             _context.Update(customer);
             _context.SaveChanges();
-
         }
+
+        //public Customer GetRentalsByCustomerId(Guid? id)
+        //{
+        //     return _context.Rentals.Where(x => x.CustomerId == id).ToList();
+        //}
     }
 }

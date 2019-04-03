@@ -48,7 +48,6 @@ namespace BiluthyrningAB.Services.Repositories
         {
             _context.Cars.Remove(car);
             _context.SaveChanges();
-
         }
 
         public void UpdateCar(Car car)
@@ -56,7 +55,6 @@ namespace BiluthyrningAB.Services.Repositories
             _context.Update(car);
 
             _context.SaveChanges();
-
         }
     }
 }

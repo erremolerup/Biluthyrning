@@ -1,1 +1,90 @@
-﻿
+﻿@model BiluthyrningAB.Models.Customer
+
+@{
+    ViewData["Title"] = "Detaljer";
+}
+
+@section Hero{
+
+    <div class="hero">
+    </div>
+
+    @{ int count = 1;}
+
+    <div class="container" style="margin-top: -1900px;">
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="text-block">
+                    <div class="text-block-text">
+                        <h2>Kundinformation</h2>
+
+                        <table class="table">
+                            <thead>
+                                <dl class="dl-horizontal">
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.FirstName)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.FirstName)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.LastName)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.LastName)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.SocSecNumber)
+                                    </dt>
+                                    <dd>
+                                        @Html.DisplayFor(model => model.SocSecNumber)
+                                    </dd>
+                                    <dt>
+                                        @Html.DisplayNameFor(model => model.Rentals)
+                                    </dt>
+                            <tbody>
+                                @foreach (var item in Model.Rentals)
+                                {
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => item.Car.NumberPlate)
+                                    </th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Car.NumberPlate)
+                                    </td>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => item.Car.CarType)
+                                    </th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Car.CarType)
+                                    </td>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => item.StartDate)
+                                    </th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => item.EndDate)
+                                    </th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <th>
+                                        @Html.DisplayNameFor(modelItem => item.Ongoing)
+                                    </th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Ongoing)
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

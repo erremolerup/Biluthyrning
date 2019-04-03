@@ -24,7 +24,7 @@ namespace BiluthyrningAB.Controllers
         private readonly ICustomersRepository _customersRepository;
 
 
-        public RentalsController(IRentalsRepository rentalsRepository, ICarsRepository carsRepository, IEntityFrameworkRepository entityFrameworkRepository, ICustomersRepository customersRepository)
+        public RentalsController(IRentalsRepository rentalsRepository, ICarsRepository carsRepository, ICustomersRepository customersRepository)
         {
             _rentalsRepository = rentalsRepository;
             _carsRepository = carsRepository;

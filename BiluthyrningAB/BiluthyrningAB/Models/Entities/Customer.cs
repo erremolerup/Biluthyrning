@@ -16,18 +16,10 @@ namespace BiluthyrningAB.Models
 
         [Required(ErrorMessage = "Du måste ange förnamn")]
         [Display(Name = "Förnamn")]
-        [ValidateOfName]
         public string FirstName
         {
             get; set;
-            //get
-            //{
-            //    return FirstName;
-            //}
-            //set
-            //{
-            //    bool barExists = typeof(Customer).GetProperties().Any(x => x.Name == "Bar");
-            //}
+           
         }
 
         [Required(ErrorMessage = "Du måste ange efternamn")]
@@ -40,6 +32,7 @@ namespace BiluthyrningAB.Models
         [ValidateOfAge]
         public string SocSecNumber { get; set; }
 
+        [Display(Name = "Kundens bilhyrningar")]
         public List<Rental> Rentals { get; set; } //En kund kan ha flera bokningar
 
         internal class ValidateOfAge : ValidationAttribute
@@ -70,19 +63,5 @@ namespace BiluthyrningAB.Models
             }
         }
 
-        internal class ValidateOfName : ValidationAttribute
-        {
-            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-            {
-                Customer customer = (Customer)validationContext.ObjectInstance;
-
-                if (customer.FirstName == customer.FirstName && customer.LastName == customer.LastName)
-                {
-                    return new ValidationResult("Namnet måste vara unikt");
-                }
-
-                return ValidationResult.Success;
-            }
-        }
     }
 }

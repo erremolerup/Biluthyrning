@@ -21,7 +21,7 @@ namespace BiluthyrningAB.Controllers
         //}
         private readonly ICustomersRepository _customersRepository;
 
-        public CustomersController(IRentalsRepository rentalsRepository, ICarsRepository carsRepository, IEntityFrameworkRepository entityFrameworkRepository, ICustomersRepository customersRepository)
+        public CustomersController(IRentalsRepository rentalsRepository, ICustomersRepository customersRepository)
         {
             _customersRepository = customersRepository;
         }
@@ -64,7 +64,6 @@ namespace BiluthyrningAB.Controllers
 
             return View(customer);
         }
-
 
         //POST: Ändra kundinfo
         [HttpPost]
@@ -125,9 +124,17 @@ namespace BiluthyrningAB.Controllers
         }
 
         // GET: vy för detaljer
-        public IActionResult Details()
+        public IActionResult Details(Guid? id)
         {
-            return View();
+            if (id == null)
+                return NotFound();
+
+            var customer = _customersRepository.GetCustomerById(id);
+
+            if (customer == null)
+                return NotFound();
+
+            return View(customer);
         }
 
         private bool CustomerExist(Guid id)
@@ -136,9 +143,17 @@ namespace BiluthyrningAB.Controllers
 
         }
 
-        //private bool CustomerExistOnName(string FirstName, string LastName)
-        //{
-        //    return _customersRepository.CustomerExistOnName(FirstName, LastName);
-        //}
+        public IActionResult Bookings(Guid? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var customer = _customersRepository.GetCustomerById(id);
+
+            if (customer == null)
+                return NotFound();
+
+            return View(customer);
+        }
     }
 }
