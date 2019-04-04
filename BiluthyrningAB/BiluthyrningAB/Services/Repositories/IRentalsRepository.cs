@@ -10,7 +10,8 @@ namespace BiluthyrningAB.Services.Repositories
         IEnumerable<Rental> GetAllRentals();
         IEnumerable<Rental> GetRentalsForCertainCustomer(Guid? CustomerId);
         IEnumerable<Rental> GetRentalsByStatus(bool status);
-         
+
+
         Rental GetRentalById(Guid? id);
         bool RentalExists(Guid id);
 

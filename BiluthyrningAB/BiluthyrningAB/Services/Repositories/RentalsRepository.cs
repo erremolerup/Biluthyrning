@@ -42,7 +42,7 @@ namespace BiluthyrningAB.Services.Repositories
         
         public IEnumerable<Rental> GetRentalsByStatus(bool status)
         {
-            return _context.Rentals.Include(x => x.Car).Where(x => x.Ongoing == status).ToList();
+            return _context.Rentals.Include(x => x.Car).Include(z => z.Customer).Where(x => x.Ongoing == status).ToList();
         }
 
         public IEnumerable<Rental> GetRentalsForCertainCustomer(Guid? CustomerId)

@@ -29,7 +29,9 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.SocSecNumber)
                                 </th>
-                                <th></th>
+                                <th>
+                                    Bokningar
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,6 +48,9 @@
                                         @Html.DisplayFor(modelItem => item.SocSecNumber)
                                     </td>
                                     <td>
+                                        <a asp-controller="Rentals" asp-action="AllRentalsOnCustomer" asp-route-CustomerId="@item.CustomerId" class="btn btn-primary">Bokningar</a>
+                                    </td>
+                                    <td>
                                         <a asp-action="Edit" asp-route-id="@item.CustomerId" class="btn btn-outline-info">Ändra</a>
                                         <a asp-action="Details" asp-route-id="@item.CustomerId" class="btn btn-outline-info">Detaljer</a>
                                         <a asp-action="Delete" asp-route-id="@item.CustomerId" class="btn btn-outline-info">Ta bort</a>
@@ -54,6 +59,9 @@
                             }
                         </tbody>
                     </table>
+                    <div>
+                        <a asp-action="Index">Gå tillbaka</a>
+                    </div>
                 </div>
             </div>
         </div>

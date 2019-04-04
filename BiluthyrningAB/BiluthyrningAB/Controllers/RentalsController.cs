@@ -13,12 +13,6 @@ namespace BiluthyrningAB.Controllers
 {
     public class RentalsController : Controller
     {
-        //private readonly AppDbContext _context;
-
-        //public RentalsController(AppDbContext context)
-        //{
-        //    _context = context;
-        //}
         private readonly IRentalsRepository _rentalsRepository;
         private readonly ICarsRepository _carsRepository;
         private readonly ICustomersRepository _customersRepository;
@@ -33,26 +27,12 @@ namespace BiluthyrningAB.Controllers
         // GET: Index för rentals
         public async Task<IActionResult> Index()
         {
-            //return View(await _context.Rentals.Include(x => x.Car).Include(y => y.Customer).ToListAsync());
             return View(await (Task.Run(() => _rentalsRepository.GetAllRentals())));
         }
 
         //GET: vyn där man skapar en bokning
         public IActionResult Create()
         {
-            //Gammal utan repositories
-            //string[] arr = Enum.GetNames(typeof(CarType));
-
-            //var viewmodel = new CreateRentalVm();
-
-            //viewmodel.CarTypes = arr.Select(x => new SelectListItem
-            //{
-            //    Text = x,
-            //    Value = x
-            //});
-
-            //return View(viewmodel);
-
             CreateRentalVm rentalVm = new CreateRentalVm();
 
             rentalVm.Cars = FillCarsListSelectListItems();
@@ -61,6 +41,27 @@ namespace BiluthyrningAB.Controllers
 
             return View(rentalVm);
 
+        }
+
+        public async Task<IActionResult> AllNonFinishedRentals()
+        {
+            var myTask = Task.Run(() => _rentalsRepository.GetRentalsByStatus(true));
+            return View(await myTask);
+        }
+
+
+        public async Task<IActionResult> AllFinishedRentals()
+        {
+            var myTask = Task.Run(() => _rentalsRepository.GetRentalsByStatus(false));
+            return View(await myTask);
+        }
+
+        public async Task<IActionResult> AllRentalsOnCustomer(Guid? CustomerId)
+        {
+            var myTask = Task.Run(() => _rentalsRepository.GetRentalsForCertainCustomer(CustomerId));
+            
+                return View(await myTask);
+            
         }
 
         private List<SelectListItem> FillCustomersListSelectListItems()
@@ -116,10 +117,6 @@ namespace BiluthyrningAB.Controllers
             }
             if (ModelState.IsValid)
             {
-                //_context.Add(rental);
-                //await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
-
                 //lägger till bokning i systemet.
                 rental.RentalId = Guid.NewGuid();
                 _rentalsRepository.AddRental(rental);
@@ -139,8 +136,6 @@ namespace BiluthyrningAB.Controllers
         //GET: Vy slutföra bokning
         public IActionResult FinishRental(Guid? id)
         {
-            //var rental = _context.Rentals.Include(x => x.Car).Single(x => x.RentalId == id);
-
             var rental = _rentalsRepository.GetRentalById(id);
 
             if (id == null)
@@ -211,7 +206,6 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            //var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
             var rental = _rentalsRepository.GetRentalById(id);
             if (rental == null)
                 return NotFound();
@@ -261,8 +255,6 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            //var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
-
             var rental = _rentalsRepository.GetRentalById(id);
             if (rental == null)
                 return NotFound();
@@ -275,9 +267,7 @@ namespace BiluthyrningAB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            //var rental = await _context.Rentals.FindAsync(id);
             var rental = _rentalsRepository.GetRentalById(id);
-            //_context.Rentals.Remove(rental);
             _rentalsRepository.RemoveRental(rental);
             return RedirectToAction(nameof(Index));
         }
@@ -288,7 +278,6 @@ namespace BiluthyrningAB.Controllers
             if (id == null)
                 return NotFound();
 
-            //var rental = _context.Rentals.Include(x => x.Car).Include(y => y.Customer).Single(x => x.RentalId == id);
             var rental = _rentalsRepository.GetRentalById(id);
             if (rental == null)
                 return NotFound();
@@ -299,7 +288,6 @@ namespace BiluthyrningAB.Controllers
         //Kollar på id ifall uthyrningen existerar
         private bool RentalExist(Guid id)
         {
-            //return _context.Rentals.Any(x => x.RentalId == id);
             return _rentalsRepository.RentalExists(id);
         }
     }
