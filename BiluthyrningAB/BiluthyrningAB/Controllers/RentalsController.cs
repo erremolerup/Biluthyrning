@@ -109,7 +109,7 @@ namespace BiluthyrningAB.Controllers
             }
             else
             {
-                ViewBag.Message = "Bilen är upptagen";
+                ViewBag.Message = "Bilen är upptagen vid den önskade tidpunkten, vänligen välj en annan bil.";
                 CreateRentalVm error_rentalVm = new CreateRentalVm();
                 error_rentalVm.Cars = FillCarsListSelectListItems();
                 error_rentalVm.Customers = FillCustomersListSelectListItems();

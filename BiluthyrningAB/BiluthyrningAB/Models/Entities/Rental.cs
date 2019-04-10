@@ -14,12 +14,21 @@ namespace BiluthyrningAB.Models
 
         [Display(Name = "Uthyrningsdatum")]
         [Required(ErrorMessage = "Ange uthyrningsdatum")]
+        [FutureDate(ErrorMessage = "Datumet måste vara senare än dagens datum")]
         public DateTime StartDate { get; set; }
 
         [Display(Name = "Återlämningsdatum")]
         [Required(ErrorMessage = "Ange återlämningsdatum")]
         public DateTime EndDate { get; set; }
 
+
+        public class FutureDateAttribute : ValidationAttribute
+        {
+            public override bool IsValid(object value)
+            {
+                return value != null && (DateTime)value > DateTime.Now;
+            }
+        }
         public decimal NumberOfDays
         {
             get
@@ -90,8 +99,5 @@ namespace BiluthyrningAB.Models
             }
         }
 
-        //En customer och en car per booking (optional)
-        //public Guid CustomerId { get; set; }
-        //public Guid CarId { get; set; }
     }
 }

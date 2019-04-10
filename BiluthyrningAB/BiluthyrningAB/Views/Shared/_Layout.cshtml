@@ -26,7 +26,18 @@
             </div>
             <div class="navbar-collapse collapse" style="height: 50px">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Rentals" asp-action="Index">Bokningar</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"
+                           asp-area="" asp-controller="Rentals" asp-action="Index">
+                            Bokningar
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="Rentals" asp-action="Index">Alla bokningar</a></li>
+                            <li><a asp-area="" asp-controller="Rentals" asp-action="AllNonFinishedRentals">Pågående uthyrningar</a></li>
+                            <li><a asp-area="" asp-controller="Rentals" asp-action="AllFinishedRentals">Slutförda uthyrningar</a></li>
+
+                        </ul>
                     <li><a asp-area="" asp-controller="Cars" asp-action="Index">Bilar</a></li>
                     <li><a asp-area="" asp-controller="Customers" asp-action="Index">Kunder</a></li>
 

@@ -20,19 +20,25 @@
                             <form asp-action="Create" method="post">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+
+
                                 <div class="form-group">
                                     <label class="control-label">Kund</label>
                                     <select asp-for="Rental.CustomerId" asp-items="Model.Customers" class="form-control">
                                         <option disabled selected>Välj kund</option>
                                     </select>
                                 </div>
-                                 <div class="form-group">
+                                <div class="form-group">
                                     <label asp-for="Rental.CarId" class="control-label">Bil</label>
                                     <select asp-for="Rental.CarId"
                                             asp-items="Model.Cars" class="form-control">
                                         <option>Välj bil</option>
                                     </select>
                                 </div>
+                                @if (ViewBag.Message != null)
+                                {
+                                    <span class="text-danger">@ViewBag.Message</span>
+                                }
                                 <div class="form-group">
                                     <label asp-for="Rental.StartDate" class="control-label"></label>
                                     <input asp-for="Rental.StartDate" class="form-control" />
