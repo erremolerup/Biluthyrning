@@ -56,7 +56,7 @@ namespace BiluthyrningAB.Controllers
             return View(await myTask);
         }
 
-        public async Task<IActionResult> AllRentalsOnCustomer(Guid? CustomerId)
+        public async Task<IActionResult> AllRentalsOnCustomer(Guid? CustomerId, Guid? RentalId)
         {
             var myTask = Task.Run(() => _rentalsRepository.GetRentalsForCertainCustomer(CustomerId));
             
@@ -152,8 +152,6 @@ namespace BiluthyrningAB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> FinishRental(Guid id, [Bind("RentalId,NewNumberKmDriven,StartDate,EndDate,CarId,CustomerId")] Rental rental)
         {
-
-
             rental.Car = _carsRepository.GetCarById(rental.CarId);
             rental.Customer = _customersRepository.GetCustomerById(rental.CustomerId);
 
