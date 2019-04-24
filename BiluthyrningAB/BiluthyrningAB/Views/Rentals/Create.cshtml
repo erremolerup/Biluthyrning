@@ -20,8 +20,6 @@
                             <form asp-action="Create" method="post">
                                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-
-
                                 <div class="form-group">
                                     <label class="control-label">Kund</label>
                                     <select asp-for="Rental.CustomerId" asp-items="Model.Customers" class="form-control">
@@ -44,7 +42,11 @@
                                     <input asp-for="Rental.StartDate" class="form-control" />
                                     <span asp-validation-for="Rental.StartDate" class="text-danger"></span>
                                 </div>
-
+                                @*<div class="form-group">
+                                    <label asp-for="Rental.EndDate" class="control-label"></label>
+                                    <input asp-for="Rental.EndDate" class="form-control" />
+                                    <span asp-validation-for="Rental.EndDate" class="text-danger"></span>
+                                </div>*@
                                 <br />
 
                                 <div class="form-group">

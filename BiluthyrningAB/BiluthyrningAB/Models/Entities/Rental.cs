@@ -14,7 +14,7 @@ namespace BiluthyrningAB.Models
 
         [Display(Name = "Uthyrningsdatum")]
         [Required(ErrorMessage = "Ange uthyrningsdatum")]
-        [FutureDate(ErrorMessage = "Datumet måste vara senare än dagens datum")]
+        //[FutureDate(ErrorMessage = "Datumet måste vara senare än dagens datum")]
         public DateTime StartDate { get; set; }
 
         [Display(Name = "Återlämningsdatum")]
